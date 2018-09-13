@@ -15,6 +15,14 @@ class App extends Component {
     };
   }
 
+  deleteTodo(todoIndex) {
+    const filteredTodos = this.state.todos.filter((todo,i) => {
+      return i != todoIndex;
+    });
+
+    this.setState({ todos: filteredTodos });
+  }
+
   handleChange(e) {
     this.setState({ newTodoDescription: e.target.value })
   }
@@ -23,7 +31,9 @@ class App extends Component {
     e.preventDefault();
     if (!this.state.newTodoDescription) {return}
     const newTodo = { description: this.state.newTodoDescription, isCompleted: false };
-    this.setState({ todos: [...this.state.todos, newTodo ], newTodoDescription: ''  })
+    let todos = this.state.todos;
+    todos.push(newTodo);
+    this.setState({ todos: todos, newTodoDescription: ''  });
   }
 
   toggleComplete(index) {
@@ -40,10 +50,11 @@ class App extends Component {
         <ul>
           {this.state.todos.map( (todo, index) =>
             <ToDo
-              key={ index }
+              key={ `todo-${index}` }
               description={ todo.description }
               isCompleted={  todo.isCompleted }
-              toggleComplete={  () => this.toggleComplete(index) }
+              deleteTodo={ () => this.deleteTodo(index) }
+              toggleComplete={ () => this.toggleComplete(index) }
             />
           )}
         </ul>
